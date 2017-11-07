@@ -1,0 +1,109 @@
+$white: #fff;
+
+// **********************
+// MIXINS
+
+@mixin transition ($proporties) {
+  -webkit-transition: $proporties;
+       -o-transition: $proporties;
+          transition: $proporties;
+}
+@mixin flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+@mixin align-items ($proporties) {
+  -webkit-box-align: $proporties;
+  -webkit-align-items: $proporties;
+      -ms-flex-align: $proporties;
+          align-items: $proporties;
+}
+@mixin justify-content ($proporties) {
+  -webkit-box-pack: $proporties;
+  -webkit-justify-content: $proporties;
+      -ms-flex-pack: $proporties;
+          justify-content: $proporties;
+}
+@mixin box-sizing ($proporties) {
+  -webkit-box-sizing: $proporties;
+          box-sizing: $proporties;
+}
+
+// **********************
+// STYLES
+
+html {
+ @include box-sizing (border-box);
+}
+*, *:before, *:after {
+  @include box-sizing (inherit);
+}
+body {
+  margin: 0;
+}
+section {
+  width: 100%;
+  height: 100px;
+  background-color: red;
+}
+.slider-container {
+  max-width: 100vw;
+  max-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  &__photo {
+    width: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    vertical-align: middle;
+    @include transition (opacity 1s ease-in-out);
+    &.active {
+      opacity: 1;
+    }
+  }
+}
+.slider-container__btn {
+  width: 50px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.1);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  &--right {
+    right: 0;
+  }
+  &--left {
+    left: 0;
+  }
+}
+.circle {
+  margin: 5px;
+  width: 15px;
+  height: 15px;
+  background-color: transparent;
+  border: 1px solid $white;
+  border-radius: 50%;
+  @include transition (background-color 1s ease-in-out);
+  &.active {
+    background-color: $white;
+  }
+}
+.circles-container {
+  width: 100%;
+  position: absolute;
+  bottom: 15px;
+  @include flex;
+  @include align-items (center);
+  @include justify-content (center);
+}
