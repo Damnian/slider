@@ -50,6 +50,7 @@ section {
 }
 .slider-container {
   max-width: 100vw;
+  height: 400px;
   max-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -71,10 +72,9 @@ section {
 }
 .slider-container__btn {
   width: 50px;
+  height: 100%;
   margin: auto;
   position: absolute;
-  top: 0;
-  bottom: 0;
   border: none;
   background-color: rgba(0, 0, 0, 0.1);
   &:hover {
