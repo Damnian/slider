@@ -4,29 +4,21 @@ dokumencie (łatwo wyobrazić sobie jako funkcję przyjmującą dokument jako ar
 */
 // później zrobić querySelectorAll, tymczasowo na jednym
   function getSlider(baseElement) {
-    return baseElement.querySelector('.slider-container');
+    return baseElement.querySelector('.image-slider');
   }
-// I gdzieś indziej:
-// const slider = getSlider(document);
-/* Ogólnie nie rozumiem tej intencji, bo dlaczego pisać 4 linijki kodu, jak można od razu:
- const slider = document.querySelector('.slider-container');
- i koniec. Chyba, że chodzi o to, by fragment:
- const slider = getSlider(document);
- móc używać wiele razy jako zmienną lokalną w wielu innych funkcjach
-*/
-
-//-------------------------------------------------------------------------------
-
+  function getImagesContainer(baseElement) {
+    return baseElement.querySelector('.images-container');
+  }
 /*
 2. Potrzebujesz narzędzia do zbudowania interfejsu (to byłaby funkcja przyjmująca
 slider jako argument, i wykorzystując mniejsze funkcje generujące poszczególe elementy,
 wzbogacała slider o elementy interfejsu).
 */
-  function createSliderInterface() {
-    createSliderLeftBtn(document, slider);
-    createSliderRightBtn(document, slider);
-    const circlesContainer = createCircleContainer(document, slider);
-    createCircles(circlesContainer, images);
+  function createSliderInterface(baseElement, elem2, elem3 ) {
+    const circlesContainer = createCircleContainer(baseElement, elem2);
+    createCircles(circlesContainer, elem3);
+    createSliderLeftBtn(baseElement, elem2);
+    createSliderRightBtn(baseElement, elem2);
     return;
   }
 // 2a. - funkcja generująca element circle-container
@@ -46,22 +38,22 @@ wzbogacała slider o elementy interfejsu).
 // 2c. - funkcja generująca element leftBtn
   function createSliderLeftBtn(baseElement, selector) {
     const sliderLeftBtn = baseElement.createElement('button');
-    selector.appendChild(sliderLeftBtn).classList.add('slider-container__btn', 'slider-container__btn--left');
+    selector.appendChild(sliderLeftBtn).classList.add('images-container__btn', 'images-container__btn--left');
     return sliderLeftBtn;
   }
 // funkcja pobierająca leftBtn
   function getLeftBtn(baseElement) {
-    return baseElement.querySelector('.slider-container__btn--left');
+    return baseElement.querySelector('.images-container__btn--left');
   }
 // 2d. - funkcja generująca element rightBtn
   function createSliderRightBtn(baseElement, selector) {
     const sliderRightBtn = baseElement.createElement('button');
-    selector.appendChild(sliderRightBtn).classList.add('slider-container__btn', 'slider-container__btn--right');
+    selector.appendChild(sliderRightBtn).classList.add('images-container__btn', 'images-container__btn--right');
     return sliderRightBtn;
   }
 // funkcja pobierająca rightBtn
   function getRightBtn(baseElement) {
-    return baseElement.querySelector('.slider-container__btn--right');
+    return baseElement.querySelector('.images-container__btn--right');
   }
 
 //-------------------------------------------------------------------------------
@@ -71,7 +63,7 @@ wzbogacała slider o elementy interfejsu).
 (funkcja przyjmująca pojedynczy slider jako argument).
 */
   function getImages(baseElement) {
-    return baseElement.querySelectorAll('.slider-container__photo');
+    return baseElement.querySelectorAll('.images-container__image');
   }
 
 //-------------------------------------------------------------------------------
@@ -94,18 +86,20 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 /*
 5. Funkcja do automatycznej zmiany zdjęć
 */
-  let currentNumber = 0;
-
   function changeImage(elem1, elem2) {
-    currentNumber = currentNumber + 1;
-    if (currentNumber == elem1.length) {
-      currentNumber = 0;
+    const image = elem1.querySelector('.images-container__image.active'),
+          circle = elem2.querySelector('.circle.active');
+    if (image.nextElementSibling == null) {
+      elem1.lastElementChild.classList.remove('active');
+      elem1.firstElementChild.classList.add('active');
+      elem2.lastElementChild.classList.remove('active');
+      elem2.firstElementChild.classList.add('active');
     }
-    for (var i = 0; i < elem1.length; i++) {
-      elem1[i].classList.remove('active');
-      elem1[currentNumber].classList.add('active');
-      elem2[i].classList.remove('active');
-      elem2[currentNumber].classList.add('active');
+    if (image.classList.contains('active')) {
+      image.classList.remove('active');
+      image.nextElementSibling.classList.add('active');
+      circle.classList.remove('active');
+      circle.nextElementSibling.classList.add('active');
     }
     return;
   }
@@ -118,8 +112,9 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 */
   function rightClick() {
     window.clearInterval(interval);
-    changeImage(images, circles);
-    interval = window.setInterval(changeImage, timeInterval, images, circles);
+    changeImage(imagesContainer, circlesContainer);
+    interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
+    return;
   }
 //-------------------------------------------------------------------------------
 
@@ -128,17 +123,24 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 */
   function leftClick(elem1, elem2) {
     window.clearInterval(interval);
-    currentNumber = currentNumber - 1;
-    if (currentNumber < 0) {
-      currentNumber = elem1.length - 1;
+
+    const image = elem1.querySelector('.images-container__image.active'),
+          circle = elem2.querySelector('.circle.active');
+
+    if (image.previousElementSibling == null) {
+      elem1.firstElementChild.classList.remove('active');
+      elem1.lastElementChild.classList.add('active');
+      elem2.firstElementChild.classList.remove('active');
+      elem2.lastElementChild.classList.add('active');
     }
-    for (var i = 0; i < elem1.length; i++) {
-      elem1[i].classList.remove('active');
-      elem1[currentNumber].classList.add('active');
-      elem2[i].classList.remove('active');
-      elem2[currentNumber].classList.add('active');
+    if (image.classList.contains('active')) {
+      image.classList.remove('active');
+      image.previousElementSibling.classList.add('active');
+      circle.classList.remove('active');
+      circle.previousElementSibling.classList.add('active');
     }
-    interval = window.setInterval(changeImage, timeInterval, images, circles);
+
+    interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
     return;
   }
 
@@ -162,7 +164,7 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
           elem2[i].classList.remove('active');
           elem2[currentNumber].classList.add('active');
         }
-        interval = window.setInterval(changeImage, timeInterval, images, circles);
+        interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
       }
     return;
     }, false);
@@ -184,32 +186,31 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 
     let smallestPhotoHeight = heightArray[0] + 'px';
     elem2.style.height = smallestPhotoHeight;
+    return;
   }
-
-// *****************************************************************************
-// ustawienie czasu dla slidera
-  const timeInterval = 3500;
 
 // *****************************************************************************
 // wywoływanie funkcji
   const slider = getSlider(document),
-        images = getImages(slider);
+        imagesContainer = getImagesContainer(slider),
+        images = getImages(imagesContainer),
+        timeInterval = slider.getAttribute('data-timer');
 
-  createSliderInterface();
+  createSliderInterface(document, slider, images);
 
   const sliderRightBtn = getRightBtn(slider),
         sliderLeftBtn = getLeftBtn(slider),
         circlesContainer = getCirclesContainer(slider),
         circles = getCircles(circlesContainer);
 
-  let interval = window.setInterval(changeImage, timeInterval, images, circles);
+  let interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
 
   sliderRightBtn.addEventListener('click', rightClick, false);
-  sliderLeftBtn.addEventListener('click', function() {leftClick(images, circles)}, false);
+  sliderLeftBtn.addEventListener('click', function() {leftClick(imagesContainer, circlesContainer)}, false);
 
   circleClick(circlesContainer, images, circles);
 
-  matchSlider(images, slider);
-  window.addEventListener('resize', function() { matchSlider(images, slider) }, false);
+  matchSlider(images, imagesContainer);
+  window.addEventListener('resize', function() { matchSlider(images, imagesContainer) }, false);
 
 }, false);

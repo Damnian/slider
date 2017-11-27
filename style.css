@@ -14,13 +14,16 @@ section {
   height: 100px;
   background-color: red; }
 
-.slider-container {
+.image-slider {
+  position: relative; }
+
+.images-container {
   max-width: 100vw;
   height: 400px;
   max-height: 100vh;
   position: relative;
   overflow: hidden; }
-  .slider-container__photo {
+  .images-container__image {
     width: 100%;
     margin: auto;
     position: absolute;
@@ -33,22 +36,22 @@ section {
     -webkit-transition: opacity 1s ease-in-out;
     -o-transition: opacity 1s ease-in-out;
     transition: opacity 1s ease-in-out; }
-    .slider-container__photo.active {
+    .images-container__image.active {
       opacity: 1; }
-
-.slider-container__btn {
-  width: 50px;
-  height: 100%;
-  margin: auto;
-  position: absolute;
-  border: none;
-  background-color: rgba(0, 0, 0, 0.1); }
-  .slider-container__btn:hover {
-    background-color: rgba(0, 0, 0, 0.5); }
-  .slider-container__btn--right {
-    right: 0; }
-  .slider-container__btn--left {
-    left: 0; }
+  .images-container__btn {
+    top: 0;
+    width: 50px;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.1); }
+    .images-container__btn:hover {
+      background-color: rgba(0, 0, 0, 0.5); }
+    .images-container__btn--right {
+      right: 0; }
+    .images-container__btn--left {
+      left: 0; }
 
 .circle {
   margin: 5px;
