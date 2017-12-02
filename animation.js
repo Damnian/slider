@@ -111,9 +111,9 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 6. Funkcja następne zdjęcie dla rightBtn
 */
   function rightClick() {
-    window.clearInterval(interval);
+    // window.clearInterval(interval);
     changeImage(imagesContainer, circlesContainer);
-    interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
+    // interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
     return;
   }
 //-------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 7. Funkcja poprzednie zdjęcie dla leftBtn
 */
   function leftClick(elem1, elem2) {
-    window.clearInterval(interval);
+    // window.clearInterval(interval);
 
     const image = elem1.querySelector('.images-container__image.active'),
           circle = elem2.querySelector('.circle.active');
@@ -140,7 +140,7 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
       circle.previousElementSibling.classList.add('active');
     }
 
-    interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
+    // interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
     return;
   }
 
@@ -205,8 +205,17 @@ warto też mieć narzędzie do wyciągania listy kółek ze slidera.
 
   let interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
 
-  sliderRightBtn.addEventListener('click', rightClick, false);
-  sliderLeftBtn.addEventListener('click', function() {leftClick(imagesContainer, circlesContainer)}, false);
+  sliderRightBtn.addEventListener('click', function() {
+    window.clearInterval(interval);
+    rightClick();
+    interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
+  }, false);
+
+  sliderLeftBtn.addEventListener('click', function() {
+    window.clearInterval(interval);
+    leftClick(imagesContainer, circlesContainer)
+    interval = window.setInterval(changeImage, timeInterval, imagesContainer, circlesContainer);
+  }, false);
 
   circleClick(circlesContainer, images, circles);
 
